@@ -13,7 +13,7 @@ class ChatBot():
             print("listing...")
             audio = recognizer.listen(mic)
         try:
-            self.test = recognizer.recognize_google(audio)
+            self.text = recognizer.recognize_google(audio)
             print("me --> ", self.text)
         except:
             print("me --> ERROR")
