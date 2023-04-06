@@ -10,7 +10,7 @@ class ChatBot():
     def speech_to_text(self):
         recognizer = sr.Recognizer()
         with sr.Microphone() as mic:
-            print("listing...")
+            print("listening...")
             audio = recognizer.listen(mic)
         try:
             self.text = recognizer.recognize_google(audio)
