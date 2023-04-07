@@ -17,6 +17,9 @@ class ChatBot():
             print("me --> ", self.text)
         except:
             print("me --> ERROR")
+    
+    def wake_up(self, text):
+        return True if self.name in text.lower() else False
 
 # Execute the AI
 if __name__ == "__main__":
