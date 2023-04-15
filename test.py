@@ -1,20 +1,37 @@
-import numpy as np
+# for speech-to-text
 import speech_recognition as sr
+# for text-to-speech
 from gtts import gTTS
-import os
+# for language model
+import transformers
+# for data
 import datetime
+import time
+import numpy as np
+import os
+
+
+nlp = transformers.pipeline("conversational", model="microsoft/DialoGPT-medium")
+
+#Time to try it out
+input_text = "hello!"
+nlp(transformers.Conversation(input_text), pad_token_id=50256)
+
+chat = nlp(transformers.Conversation(ai.text), pad_token_id=50256)
+res=str(chat)
+res=res[res.find("bot >> ")+6:].strip()
 
 # Build the AI
 class ChatBot():
     def __init__(self, name):
         print("----- starting up", name, "-----")
         self.name = name
-
     def speech_to_text(self):
         recognizer = sr.Recognizer()
         with sr.Microphone() as mic:
             print("listening...")
             audio = recognizer.listen(mic)
+            self.text="ERROR"
         try:
             self.text = recognizer.recognize_google(audio)
             # self.text = self.text.replace("how", "HAL") if "how" in self.text else self.text 
@@ -22,22 +39,26 @@ class ChatBot():
             print("me --> ", self.text)
         except:
             print("me --> ERROR")
-    
-    def wake_up(self, text):
-        return True if self.name in text else False
 
     @staticmethod
     def text_to_speech(text):
-        print("AI --> ", text)
+        print("Dev --> ", text)
         speaker = gTTS(text=text, lang="en", slow=False)
         speaker.save("res.mp3")
+        statbuf = os.stat("res.mp3")
+        mbytes = statbuf.st_size / 1024
+        duration = mbytes / 200
 
         #mac
         os.system("afplay res.mp3")
         #windows
         # os.system("start res.mp3")
 
+        time.sleep(int(50 * duration))
         os.remove("res.mp3")
+    
+    def wake_up(self, text):
+        return True if self.name in text else False
     
     @staticmethod
     def action_time():
