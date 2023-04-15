@@ -10,17 +10,6 @@ import time
 import numpy as np
 import os
 
-
-nlp = transformers.pipeline("conversational", model="microsoft/DialoGPT-medium")
-
-#Time to try it out
-input_text = "hello!"
-nlp(transformers.Conversation(input_text), pad_token_id=50256)
-
-chat = nlp(transformers.Conversation(ai.text), pad_token_id=50256)
-res=str(chat)
-res=res[res.find("bot >> ")+6:].strip()
-
 # Build the AI
 class ChatBot():
     def __init__(self, name):
@@ -67,7 +56,10 @@ class ChatBot():
 # Execute the AI
 if __name__ == "__main__":
     ai = ChatBot(name="Dev")
-    while True:
+    nlp = transformers.pipeline("conversational", model="microsoft/DialoGPT-medium")
+    os.environ["TOKENIZERS_PARALLELISM"] = "true"
+    ex = True
+    while ex:
         ai.speech_to_text()
         ## wake up
         if ai.wake_up(ai.text) is True:
@@ -78,5 +70,17 @@ if __name__ == "__main__":
         ## respond politely
         elif any(w in ai.text for w in ["thank", "thanks"]):
             res = np.random.choice(
-                ["you're welcome!", "anytime!", "no problem!", "cool!", "I'm here if you need me!", "peace out!"])
+                ["you're welcome!", "anytime!", "no problem!", "of course!", "I'm here if you need me!", "don't mention it!"])
+        elif any(w in ai.text for w in ["exit", "close"]):
+            res = np.random.choice(["See you later!", "Have a good day!", "Bye!", "Goodbye!", "Hope to meet again soon!", "Until next time!"])
+            ex = False
+        ## conversation
+        else:
+            if ai.text == "ERROR":
+                res = "Sorry, come again?"
+            else:
+                chat = nlp(transformers.Conversation(ai.text), pad_token_id=50256)
+                res=str(chat)
+                res=res[res.find("bot >> ")+6:].strip()
         ai.text_to_speech(res)
+    print("----- Closing down Dev -----")
