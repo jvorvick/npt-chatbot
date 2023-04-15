@@ -17,7 +17,7 @@ class ChatBot():
             audio = recognizer.listen(mic)
         try:
             self.text = recognizer.recognize_google(audio)
-            self.text = self.text.replace("how", "HAL") if "how" in self.text else self.text 
+            # self.text = self.text.replace("how", "HAL") if "how" in self.text else self.text 
             # self.text = self.text[:1].upper() + self.text[1:]
             print("me --> ", self.text)
         except:
@@ -45,12 +45,12 @@ class ChatBot():
 
 # Execute the AI
 if __name__ == "__main__":
-    ai = ChatBot(name="HAL")
+    ai = ChatBot(name="Dev")
     while True:
         ai.speech_to_text()
         ## wake up
         if ai.wake_up(ai.text) is True:
-            res = "Hello, I am HAL the AI, what can I do for you?"
+            res = "Hello, I am Dev the AI, what can I do for you?"
         ## do any action
         elif "time" in ai.text:
             res = ai.action_time()
